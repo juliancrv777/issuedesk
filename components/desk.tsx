@@ -1,6 +1,7 @@
 'use client';
 import { useCallback,useEffect,useRef,useState } from 'react';
 import { flushSync } from 'react-dom';
+import { clientUUID } from '@/lib/client-uuid';
 import { z } from 'zod';
 import { Inbox,TicketCheck,Plus,Search,SlidersHorizontal,ArrowUpRight,MessageSquare,Clock,CheckCircle2,RotateCcw,RefreshCw,Pencil,UserRound,ChevronLeft,ChevronRight,X,FlaskConical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -35,7 +36,7 @@ export default function Desk(){
   const [selectedId,setSelectedId]=useState<number|null>(null);const [selected,setSelected]=useState<TicketDetail|null>(null);const [detailError,setDetailError]=useState('');const [detailLoading,setDetailLoading]=useState(false);const [detailReload,setDetailReload]=useState(0);
   const [comment,setComment]=useState('');const commentKey=useRef('');
   const refresh=()=>setReload(n=>n+1);
-  const openCreate=useCallback(()=>{creationKey.current=crypto.randomUUID();setEditing(undefined);setFormError('');setFormOpen(true);},[]);
+  const openCreate=useCallback(()=>{creationKey.current=clientUUID();setEditing(undefined);setFormError('');setFormOpen(true);},[]);
   useEffect(()=>{const timer=setTimeout(()=>{setSearch(query);setPage(1);},250);return()=>clearTimeout(timer);},[query]);
   useEffect(()=>{
     const controller=new AbortController();setLoading(true);setLoadError('');
@@ -62,7 +63,7 @@ export default function Desk(){
     catch(error){setFormError((error as Error).message);}finally{setBusy(false);}
   }
   async function move(next:Status){if(!selected)return;setBusy(true);setDetailError('');try{await api(`/api/tickets/${selected.ticket.id}/status`,'PATCH',{status:next,version:selected.ticket.version});refresh();setDetailReload(n=>n+1);toast.success('Status atualizado.');}catch(error){setDetailError((error as Error).message);}finally{setBusy(false);}}
-  async function submitComment(event:React.FormEvent){event.preventDefault();if(!selected)return;setBusy(true);setDetailError('');try{if(!commentKey.current)commentKey.current=crypto.randomUUID();await api(`/api/tickets/${selected.ticket.id}/comments`,'POST',{body:comment,id:commentKey.current});setComment('');commentKey.current='';setDetailReload(n=>n+1);toast.success('Comentário adicionado.');}catch(error){setDetailError((error as Error).message);}finally{setBusy(false);}}
+  async function submitComment(event:React.FormEvent){event.preventDefault();if(!selected)return;setBusy(true);setDetailError('');try{if(!commentKey.current)commentKey.current=clientUUID();await api(`/api/tickets/${selected.ticket.id}/comments`,'POST',{body:comment,id:commentKey.current});setComment('');commentKey.current='';setDetailReload(n=>n+1);toast.success('Comentário adicionado.');}catch(error){setDetailError((error as Error).message);}finally{setBusy(false);}}
   async function examples(){setBusy(true);try{await api('/api/examples','POST',{});refresh();toast.success('Chamados de exemplo adicionados.');}catch(error){toast.error((error as Error).message);refresh();}finally{setBusy(false);}}
   const stats=pageData?.stats;const total=stats?stats.open+stats.in_progress+stats.resolved:0;
   const activeFilters=search||status!=='all'||priority!=='all';

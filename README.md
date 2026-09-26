@@ -8,6 +8,35 @@ IssueDesk brings ticket creation, priority, assignment, comments and status trac
 
 [Architecture](docs/ARCHITECTURE.md) · [HTTP API](docs/API.md) · [Validation](docs/VALIDATION.md)
 
+## See the workflow
+
+Review the app without signing in: these screenshots and the **35-second visual walkthrough** show a local instance using fictional data. The video is an annotated sequence of real interface captures, not a continuous screen recording.
+
+[Watch / download the walkthrough (MP4)](docs/media/issuedesk-walkthrough.mp4) · [Capture notes and reproduction steps](docs/DEMO.md)
+
+![IssueDesk walkthrough: create, edit, start and resolve a ticket](docs/media/issuedesk-preview.gif)
+
+### Workspace overview
+
+![Ticket queue with priorities, assignees and status summaries](docs/media/01-overview.jpg)
+
+<details>
+<summary>View ticket creation and resolution screenshots</summary>
+
+**Create a ticket with a requester and an assignee**
+
+![Filled ticket creation form](docs/media/02-create.jpg)
+
+**Resolve the ticket**
+
+![Resolved ticket with its current assignee](docs/media/06-resolved.jpg)
+
+**Review the history**
+
+![History showing creation, editing, status changes and a solution comment](docs/media/07-history.jpg)
+
+</details>
+
 ## Features
 
 - Create and edit tickets with validated fields.
