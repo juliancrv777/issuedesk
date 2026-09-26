@@ -4,9 +4,15 @@ IssueDesk is a single-workspace help desk. The UI is written in React and TypeSc
 
 ## Request flow
 
-`React components → HTTP route → validation → ticket store → D1`
+`React components → workspace/list/detail hooks → ticket API client → HTTP route → validation → ticket store → D1`
 
-- `components/desk.tsx`: list, filters, detail panel and request lifecycle.
+- `components/desk.tsx`: composes the workspace layout.
+- `components/desk/`: summary, filters, ticket list, form dialog, detail panel and shared display helpers.
+- `hooks/use-ticket-workspace.ts`: coordinates mutations, dialogs, notifications and retry keys.
+- `hooks/use-ticket-list.ts` and `use-ticket-detail.ts`: fetching, cancellation, loading and error state; the list also owns debounced search and pagination.
+- `hooks/use-ticket-tool.ts`: optional WebMCP registration and cleanup.
+- `lib/api-client.ts`: JSON transport and consistent HTTP errors.
+- `lib/ticket-api.ts`: typed ticket endpoints and mutation payloads.
 - `components/ticket-form.tsx`: reusable create/edit form.
 - `lib/tickets.ts`: shared types, validation and permitted status transitions.
 - `lib/api-server.ts`: bounded JSON parsing, same-origin checks and error responses.

@@ -74,7 +74,7 @@ npm test
 npm run build
 ```
 
-The nine tests cover validation, creation retries, filters, pagination, comments, stale edits, workflow transitions, rollback and missing records. See the validation record for the distinction between SQLite tests and running-API checks.
+The thirteen tests cover JSON transport, API error handling, cancellation, validation, creation retries, filters, pagination, comments, stale edits, workflow transitions, rollback and missing records. See the validation record for the distinction between SQLite tests and running-API checks.
 
 ## Implementation
 
