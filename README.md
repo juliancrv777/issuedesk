@@ -72,9 +72,10 @@ On Windows PowerShell, use `npm.cmd` if the script execution policy blocks `npm`
 npm run typecheck
 npm test
 npm run build
+npm run test:integration
 ```
 
-The thirteen tests cover JSON transport, API error handling, cancellation, validation, creation retries, filters, pagination, comments, stale edits, workflow transitions, rollback and missing records. See the validation record for the distinction between SQLite tests and running-API checks.
+The thirteen tests cover JSON transport, API error handling, cancellation, validation, creation retries, filters, pagination, comments, stale edits, workflow transitions, rollback and missing records. Three additional HTTP integration tests exercise the compiled Worker and local D1: the ticket lifecycle, search/filter/pagination, and request validation. The integration suite starts its own local server, applies the checked-in migrations to a temporary database, and removes that database afterward. Run the build first; no deployment credentials or external base URL are required. Both suites run in GitHub Actions. See [the validation record](docs/VALIDATION.md) for coverage and limitations.
 
 ## Implementation
 

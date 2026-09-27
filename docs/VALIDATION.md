@@ -11,7 +11,7 @@ The database tests use a small adapter for the D1 API and atomic batches. They e
 
 The HTTP check used a temporary ticket, which was removed from the local database afterward. No production records were used.
 
-GitHub Actions runs installation, type checks, tests and production compilation. Check the Actions tab for hosted outcomes. The initial validation did not include browser interaction/visual QA. A supported WebMCP contract check has not been performed; WebMCP is an optional progressive enhancement. Accessibility relies on semantic markup, responsive styles and the installed UI primitives, and has not been independently audited.
+GitHub Actions runs installation, type checks, unit/domain tests, production compilation and HTTP integration tests. Check the Actions tab for hosted outcomes. The initial validation did not include browser interaction/visual QA. A supported WebMCP contract check has not been performed; WebMCP is an optional progressive enhancement. Accessibility relies on semantic markup, responsive styles and the installed UI primitives, and has not been independently audited.
 
 ## Frontend refactor — 2026-09-26
 
@@ -23,3 +23,17 @@ Verified locally with Node.js 24.19.0 on Linux:
 - Browser records were fictional and used local D1 only. No production data was changed.
 
 The new client tests mock HTTP responses; they do not simulate the complete React lifecycle or replace automated end-to-end tests.
+
+## Automated HTTP integration — 2026-09-27
+
+Verified locally with Node.js 24.19.0 on Linux. All 16 tests passed across the two commands: 13 unit/domain/client tests and three HTTP integration scenarios. TypeScript checks and production compilation also passed.
+
+`npm run test:integration` uses the compiled Worker in Wrangler's local runtime with a fresh temporary D1 database. It applies every migration listed in the checked-in migration journal, binds only to loopback, and removes the database and stops the server on completion. It never accepts a remote target URL.
+
+The scenarios cover:
+
+- Create/retry, edit, stale-edit rejection, invalid status transition, start, comment/retry, resolve, reopen and persisted history.
+- Search, status/priority filters, pagination without duplicate records, invalid pagination and missing records.
+- Foreign-origin rejection, unsupported content type, malformed JSON, oversized requests and invalid fields, with no extra database writes.
+
+These tests run after the build in GitHub Actions. They exercise HTTP routes and local D1 without mocking application responses. They do not exercise browser interactions or establish production performance, authentication or availability guarantees.
