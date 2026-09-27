@@ -16,13 +16,12 @@ let server: ChildProcess | undefined;
 let baseURL: string;
 let logs = '';
 const config = 'dist/server/wrangler.json';
-const cli = [
-  '--import',
-  './scripts/sites-env.mjs',
-  './node_modules/wrangler/bin/wrangler.js',
-];
-function child(args: string[]) {
-  const processHandle = spawn(process.execPath, [...cli, ...args], {
+const cli = ['--import', './scripts/sites-env.mjs'];
+function child(
+  args: string[],
+  script = './node_modules/wrangler/bin/wrangler.js',
+) {
+  const processHandle = spawn(process.execPath, [...cli, script, ...args], {
     env: { ...process.env, SITES_RUNTIME_ROOT: runtime, CI: 'true' },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
@@ -75,20 +74,7 @@ before(
       socket.close((error) => (error ? reject(error) : resolve())),
     );
     baseURL = `http://127.0.0.1:${port}`;
-    server = child([
-      'dev',
-      '--config',
-      config,
-      '--local',
-      '--persist-to',
-      runtime,
-      '--ip',
-      '127.0.0.1',
-      '--port',
-      String(port),
-      '--inspector-port',
-      '0',
-    ]);
+    server = child([String(port), runtime], './scripts/test-server.mjs');
     const started = Date.now();
     while (Date.now() - started < 30000) {
       assert.equal(server.exitCode, null, logs);
@@ -252,7 +238,13 @@ test('HTTP boundary rejects foreign origins, malformed JSON and oversized bodies
       body: item.body,
       signal: AbortSignal.timeout(5000),
     });
-    assert.equal(response.status, item.status);
+    if (response.status !== item.status) {
+      const responseText = await response.text();
+      await delay(100);
+      assert.fail(
+        `Expected ${item.status}, got ${response.status}: ${responseText}\n${logs.slice(-4000)}`,
+      );
+    }
     const error = (await response.json()) as { error: unknown };
     assert.equal(typeof error.error, 'string');
   }

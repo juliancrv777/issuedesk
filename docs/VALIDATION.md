@@ -28,7 +28,7 @@ The new client tests mock HTTP responses; they do not simulate the complete Reac
 
 Verified locally with Node.js 24.19.0 on Linux. All 16 tests passed across the two commands: 13 unit/domain/client tests and three HTTP integration scenarios. TypeScript checks and production compilation also passed.
 
-`npm run test:integration` uses the compiled Worker in Wrangler's local runtime with a fresh temporary D1 database. It applies every migration listed in the checked-in migration journal, binds only to loopback, and removes the database and stops the server on completion. It never accepts a remote target URL.
+`npm run test:integration` uses the compiled Worker in Miniflare's local Worker runtime with a fresh temporary D1 database. It applies every migration listed in the checked-in migration journal, binds only to loopback, and removes the database and stops the server on completion. It never accepts a remote target URL.
 
 The scenarios cover:
 
@@ -37,3 +37,5 @@ The scenarios cover:
 - Foreign-origin rejection, unsupported content type, malformed JSON, oversized requests and invalid fields, with no extra database writes.
 
 These tests run after the build in GitHub Actions. They exercise HTTP routes and local D1 without mocking application responses. They do not exercise browser interactions or establish production performance, authentication or availability guarantees.
+
+The first hosted run exposed an intermittent 503 from Wrangler’s development proxy during a mutation request. The test server now runs the compiled modules directly in Miniflare, using the generated Wrangler configuration for bindings and assets. This removes the development proxy and hot-reload lifecycle from the test path without retrying failed mutations or relaxing assertions.
