@@ -6,7 +6,7 @@ IssueDesk brings ticket creation, priority, assignment, comments and status trac
 
 **React · TypeScript · Zod · SQLite / Cloudflare D1 · Drizzle · GitHub Actions**
 
-[Architecture](docs/ARCHITECTURE.md) · [HTTP API](docs/API.md) · [Validation](docs/VALIDATION.md)
+[Project case study](docs/CASE-STUDY.md) · [Architecture](docs/ARCHITECTURE.md) · [HTTP API](docs/API.md) · [Validation](docs/VALIDATION.md)
 
 ## See the workflow
 
