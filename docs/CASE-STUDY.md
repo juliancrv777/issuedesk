@@ -22,10 +22,10 @@ The project covers the responsive React interface, reusable create/edit form, li
 
 Start with the [screenshots and visual walkthrough](../README.md#see-the-workflow). The 35-second video is an annotated sequence of interface captures using fictional data.
 
-The automated suite contains 13 unit/domain/client tests plus three HTTP integration scenarios. Manual browser validation covered creation, editing, preserving a comment draft, posting comments, status changes and search. Commands and limitations are in the [validation record](VALIDATION.md).
+The automated suite contains 13 unit/domain/client tests plus three HTTP integration scenarios and three browser scenarios executed at desktop and mobile sizes. Manual browser validation covered creation, editing, preserving a comment draft, posting comments, status changes and search. Commands and limitations are in the [validation record](VALIDATION.md).
 
 ## Scope and tradeoffs
 
-This version has one shared workspace. Assignee names are labels, not authenticated accounts. Application-level authentication, role permissions and automated browser tests remain future work. The hosted application is private; repository visitors can review the demonstration and run the app locally. Local runtime tests do not establish production performance or availability.
+This version has one shared workspace. Assignee names are labels, not authenticated accounts. Application-level authentication and role permissions remain future work. Browser tests cover the core flow, stale edits and ambiguous comment retries in Chromium; Firefox, WebKit and a full accessibility audit remain outside this suite. The hosted application is private; repository visitors can review the demonstration and run the app locally. Local runtime tests do not establish production performance or availability.
 
 [Architecture](ARCHITECTURE.md) · [API](API.md) · [Back to README](../README.md)

@@ -39,3 +39,32 @@ The scenarios cover:
 These tests run after the build in GitHub Actions. They exercise HTTP routes and local D1 without mocking application responses. They do not exercise browser interactions or establish production performance, authentication or availability guarantees.
 
 The first hosted run exposed an intermittent 503 from Wrangler’s development proxy during a mutation request. The test server now runs the compiled modules directly in Miniflare, using the generated Wrangler configuration for bindings and assets. This removes the development proxy and hot-reload lifecycle from the test path without retrying failed mutations or relaxing assertions.
+
+## Automated browser coverage — 2026-09-29
+
+`npm run test:e2e` runs Playwright against the compiled application, with three
+scenarios on desktop Chromium and a Pixel 7 viewport (six executions):
+
+- Create, edit, preserve a comment draft, post a comment, start, resolve, reload,
+  reopen, search and filter.
+- Two tabs editing the same ticket: the stale writer receives 409, retains its
+  draft and cannot overwrite the first edit.
+- A comment is committed but its response is dropped. Retrying from the UI must
+  produce exactly one persisted comment after reloading. This one transport fault
+  is injected; the request still reaches the real local Worker and D1.
+
+HTTP and browser tests share `test/helpers/local-worker.ts`, which applies the
+checked-in migrations to a disposable database, selects a loopback port and
+cleans up on completion or startup failure. No remote base URL is accepted.
+The browser suite uses one worker, unique ticket titles, no test retries and
+condition-based assertions instead of fixed sleeps.
+
+Install Chromium with `npx playwright install --with-deps chromium`, then run
+`npm run build` and `npm run test:e2e`. CI uploads the HTML report and failure
+traces/screenshots as `browser-test-report` for seven days.
+
+Local type checks, 13 unit/domain/client tests, production compilation and three
+HTTP integration tests passed. Local Chromium installation returned an invalid
+archive, so hosted browser execution must be checked in GitHub Actions. These
+tests do not establish authentication, cross-browser support, accessibility
+compliance or production availability.
