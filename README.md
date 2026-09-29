@@ -73,9 +73,11 @@ npm run typecheck
 npm test
 npm run build
 npm run test:integration
+npx playwright install --with-deps chromium
+npm run test:e2e
 ```
 
-The thirteen tests cover JSON transport, API error handling, cancellation, validation, creation retries, filters, pagination, comments, stale edits, workflow transitions, rollback and missing records. Three additional HTTP integration tests exercise the compiled Worker and local D1: the ticket lifecycle, search/filter/pagination, and request validation. The integration suite starts its own local server, applies the checked-in migrations to a temporary database, and removes that database afterward. Run the build first; no deployment credentials or external base URL are required. Both suites run in GitHub Actions. See [the validation record](docs/VALIDATION.md) for coverage and limitations.
+The thirteen tests cover JSON transport, API error handling, cancellation, validation, creation retries, filters, pagination, comments, stale edits, workflow transitions, rollback and missing records. Three additional HTTP integration tests exercise the compiled Worker and local D1: the ticket lifecycle, search/filter/pagination, and request validation. The integration suite starts its own local server, applies the checked-in migrations to a temporary database, and removes that database afterward. Run the build first; no deployment credentials or external base URL are required. All suites run in GitHub Actions. The browser suite runs three scenarios in Chromium at desktop and mobile sizes: the ticket lifecycle with draft preservation and filters; conflicting edits in two tabs; and comment retry after a lost response. Browser runs use a fresh local D1 per worker and the compiled application. Failure traces, screenshots and an HTML report are uploaded as CI artifacts for seven days. See [the validation record](docs/VALIDATION.md) for coverage and limitations.
 
 ## Implementation
 
@@ -95,4 +97,4 @@ Generated schema migrations are included in the build for the Sites deployment i
 
 This release focuses on a complete ticket workflow. It does not include attachments, email notifications, SLA calculations, individual activity attribution or production operations such as backups and monitoring.
 
-Possible next increments: authenticated team membership, role permissions, automated browser tests and an outbox for notifications. These are planned improvements, not implemented features.
+Possible next increments: authenticated team membership, role permissions and an outbox for notifications. These are planned improvements, not implemented features.
